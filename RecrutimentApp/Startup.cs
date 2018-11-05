@@ -44,6 +44,9 @@ namespace RecrutimentApp
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "jobOffers",
+                    template: "{controller=JobOffer}/{action=Index}");
             });
         }
     }
