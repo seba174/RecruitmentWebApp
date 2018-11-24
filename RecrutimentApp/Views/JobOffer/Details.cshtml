@@ -20,7 +20,7 @@
                 <label>Location:</label>
                 <span>@Model.Location</span>
             </div>
-            @if(Model.SalaryFrom.HasValue)
+            @if (Model.SalaryFrom.HasValue)
             {
                 <div>
                     <label>Salary from:</label>
@@ -46,7 +46,7 @@
                 </div>
             }
             <div>
-                @Html.ActionLink("Edit", "Edit", new { id = Model.Id}, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
                 @using (Html.BeginForm("Delete", "JobOffer", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
                 {
                     @Html.AntiForgeryToken()
@@ -57,6 +57,3 @@
     </div>
     @Html.ActionLink("Go back to Job Offers", "Index", "JobOffer", null, new { @class = "btn btn-primary" })
 </div>
-
-
-

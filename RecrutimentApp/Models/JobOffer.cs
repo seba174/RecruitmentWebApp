@@ -23,6 +23,7 @@ namespace RecrutimentApp.Models
 
         public DateTime Created { get; set; }
 
+        [Required]
         public string Location { get; set; }
 
         [Required]
@@ -31,7 +32,7 @@ namespace RecrutimentApp.Models
 
         [Display(Name = "Valid until")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyy-MM-dd}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-DD}")]
         public DateTime? ValidUntil { get; set; }
     }
 }

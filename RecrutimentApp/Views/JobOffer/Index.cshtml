@@ -1,7 +1,4 @@
 ﻿@model IEnumerable<JobOffer>
-@{
-    ViewData["Title"] = "Index";
-}
 
 <div class="row page-box">
     <div class="col-sm-12">
@@ -10,8 +7,8 @@
         @using (Html.BeginForm("Index", "JobOffer", FormMethod.Get))
         {
             <div class="input-group col-md-12" style="margin-bottom: 14px">
-                <input type="text" class="form-control" placeholder="Search offer by title..." 
-                       name="seach" id="seach"/>
+                <input type="text" class="form-control" placeholder="Search offer by title..."
+                       name="search" id="search" />
                 <span class="input-group-btn">
                     <button class="btn btn-info" type="submit">
                         <i class="glyphicon glyphicon-search"></i>
@@ -30,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var offer in Model.OrderBy(o => o.Created))
+                @foreach (var offer in Model.OrderBy(o => o.Created))
                 {
                     <tr>
                         <td>@Html.ActionLink(offer.JobTitle, "Details", new { id = offer.Id })</td>
