@@ -1,0 +1,28 @@
+﻿@model Company
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2>@Model.Name</h2>
+        <br />
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name):
+            @Html.DisplayFor(m => m.Name)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.HeadquaterLocation):
+            @Html.DisplayFor(m => m.HeadquaterLocation)
+        </div>
+
+        @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-primary" })
+        @using (Html.BeginForm("Delete", "Company", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger">Delete</button>
+        }
+    </div>
+</div>
