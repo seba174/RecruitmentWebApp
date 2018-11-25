@@ -19,71 +19,71 @@ namespace RecrutimentApp.Controllers
         public JobOfferController(DataContext context)
         {
             dataContext = context;
-            if (dataContext.Companies.Count() < 3)
-            {
-                //dataContext.Companies.AddRange(
-                //    new Company() { Name = "Predica" },
-                //    new Company() { Name = "Microsoft" },
-                //    new Company() { Name = "Github" });
-                //dataContext.SaveChanges();
-            }
+            //if (dataContext.Companies.Count() < 3)
+            //{
+            //    dataContext.Companies.AddRange(
+            //        new Company() { Name = "Predica", HeadquaterLocation = "Warsaw" },
+            //        new Company() { Name = "Microsoft", HeadquaterLocation = "Redmond" },
+            //        new Company() { Name = "Github", HeadquaterLocation = "San Francisco" });
+            //    dataContext.SaveChanges();
+            //}
 
-            if (dataContext.JobOffers.Count() < 2)
-            {
-                //dataContext.JobOffers.AddRange(
-                //new JobOffer
-                //{
-                //    JobTitle = "Backend developer",
-                //    CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Predica")?.Id ?? 0,
-                //    Created = DateTime.Now.AddDays(-2),
-                //    Description = "Backend C# developer with intrests about IoT solutions. The main task would be building API which expose data from phisical devices. Description need to have at least 100 characters so I am adding some. In test case I reccomend you to use Lorem Impsum.",
-                //    Location = "Poland",
-                //    SalaryFrom = 2000,
-                //    SalaryTo = 10000,
-                //    ValidUntil = DateTime.Now.AddDays(20).Date
-                //});
-                //new JobOffer
-                //{
-                //    JobTitle = "Frontend developer",
-                //    CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Microsoft")?.Id ?? 0,
-                //    Created = DateTime.Now.AddDays(-2),
-                //    Description = "Developing Office 365 front end interface.",
-                //    Location = "Poland",
-                //    SalaryFrom = 2000,
-                //    SalaryTo = 10000,
-                //    ValidUntil = DateTime.Now.AddDays(20).Date
-                //});
+            //if (dataContext.JobOffers.Count() < 2)
+            //{
+            //    dataContext.JobOffers.AddRange(
+            //    new JobOffer
+            //    {
+            //        JobTitle = "Backend developer",
+            //        CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Predica")?.Id ?? 0,
+            //        Created = DateTime.Now.AddDays(-2),
+            //        Description = "Backend C# developer with intrests about IoT solutions. The main task would be building API which expose data from phisical devices. Description need to have at least 100 characters so I am adding some. In test case I reccomend you to use Lorem Impsum.",
+            //        Location = "Poland",
+            //        SalaryFrom = 2000,
+            //        SalaryTo = 10000,
+            //        ValidUntil = DateTime.Now.AddDays(20).Date
+            //    },
+            //    new JobOffer
+            //    {
+            //        JobTitle = "Frontend developer",
+            //        CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Microsoft")?.Id ?? 0,
+            //        Created = DateTime.Now.AddDays(-2),
+            //        Description = "Developing Office 365 front end interface.",
+            //        Location = "Poland",
+            //        SalaryFrom = 2000,
+            //        SalaryTo = 10000,
+            //        ValidUntil = DateTime.Now.AddDays(20).Date
+            //    });
 
-                dataContext.SaveChanges();
-            }
+            //    dataContext.SaveChanges();
+            //}
         }
 
         public async Task<ActionResult> Index([FromQuery(Name = "search")] string searchString)
         {
             if (string.IsNullOrEmpty(searchString))
             {
-                return View(dataContext.JobOffers.Join(
+                return View(await dataContext.JobOffers.Join(
                     dataContext.Companies,
                     o => o.CompanyId,
                     c => c.Id,
-                    (o, c) => new JobOffer(o, c)).ToList());
+                    (o, c) => new JobOffer(o, c)).ToListAsync());
             }
 
             List<JobOffer> searchResult = await dataContext.JobOffers.Where(o => o.JobTitle.ToLower().Contains(searchString.ToLower())).ToListAsync();
             return View(searchResult);
         }
 
-        public IActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            JobOffer jobOffer = dataContext.JobOffers.Where(j => j.Id == id).FirstOrDefault();
+            JobOffer jobOffer = await dataContext.JobOffers.Where(j => j.Id == id).FirstOrDefaultAsync();
             if (jobOffer is null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            jobOffer.JobApplications = dataContext.JobApplications.Where(ja => ja.JobOfferId == jobOffer.Id).ToList();
+            jobOffer.JobApplications = await dataContext.JobApplications.Where(ja => ja.JobOfferId == jobOffer.Id).ToListAsync();
 
-            return View(new JobOffer(jobOffer, dataContext.Companies.Find(jobOffer.CompanyId)));
+            return View(new JobOffer(jobOffer, await dataContext.Companies.FindAsync(jobOffer.CompanyId)));
         }
 
         public async Task<ActionResult> Edit(int? id)
@@ -99,7 +99,7 @@ namespace RecrutimentApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            return View(new JobOffer(offer, dataContext.Companies.Find(offer.CompanyId)));
+            return View(new JobOffer(offer, await dataContext.Companies.FindAsync(offer.CompanyId)));
         }
 
         [HttpPost]
@@ -141,7 +141,7 @@ namespace RecrutimentApp.Controllers
         {
             var model = new JobOfferCreateView
             {
-                Companies = dataContext.Companies
+                Companies = await dataContext.Companies.ToListAsync()
             };
             return View(model);
         }
@@ -152,7 +152,7 @@ namespace RecrutimentApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Companies = dataContext.Companies;
+                model.Companies = await dataContext.Companies.ToListAsync();
                 return View(model);
             }
 
@@ -168,7 +168,7 @@ namespace RecrutimentApp.Controllers
                 Created = DateTime.Now
             };
 
-            dataContext.JobOffers.Add(jobOffer);
+            await dataContext.JobOffers.AddAsync(jobOffer);
             await dataContext.SaveChangesAsync();
 
             return RedirectToAction("index");

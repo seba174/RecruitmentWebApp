@@ -7,11 +7,27 @@ using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Controllers
 {
-    public class ApplyController : Controller
+    public class JobApplicationController : Controller
     {
         private readonly DataContext dataContext;
 
-        public ApplyController(DataContext context) => dataContext = context;
+        public JobApplicationController(DataContext context) => dataContext = context;
+
+        public async Task<ActionResult> Details(int id)
+        {
+            JobApplication jobApplication = await dataContext.JobApplications.FindAsync(id);
+            if (jobApplication == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            JobOffer offer = await dataContext.JobOffers.FindAsync(jobApplication.JobOfferId);
+
+            return View(new JobApplicationWithOfferName(jobApplication)
+            {
+                OfferName = offer.JobTitle
+            });
+        }
 
         public async Task<ActionResult> Create(int? offerId)
         {
@@ -26,7 +42,7 @@ namespace RecrutimentApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            return View(new JobApplicationCreateModel()
+            return View(new JobApplicationWithOfferName()
             {
                 JobOfferId = offerId.Value,
                 OfferName = offer.JobTitle
@@ -35,7 +51,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(JobApplicationCreateModel model)
+        public async Task<ActionResult> Create(JobApplicationWithOfferName model)
         {
             if (!ModelState.IsValid)
             {

@@ -42,11 +42,11 @@
             {
                 <div>
                     <label>Valid:</label>
-                    <span>@Model.ValidUntil.Value.Subtract(DateTime.Now).Days days (@Model.ValidUntil.Value.Date)</span>
+                    <span>@Model.ValidUntil.Value.Subtract(DateTime.Now).Days days (@Model.ValidUntil.Value.ToShortDateString())</span>
                 </div>
             }
             <div>
-                @Html.ActionLink("Apply now", "Create", "Apply", new { offerId = Model.Id }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Apply now", "Create", "JobApplication", new { offerId = Model.Id }, new { @class = "btn btn-primary" })
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
                 @using (Html.BeginForm("Delete", "JobOffer", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
                 {
@@ -73,7 +73,7 @@
                     @foreach (var application in Model.JobApplications.OrderBy(o => o.Id))
                     {
                         <tr>
-                            <td>@Html.ActionLink($"{application.FirstName} {application.Lastname}", "Details", "JobApplication", new { id = application.Id })</td>
+                            <td>@Html.ActionLink($"{application.FirstName} {application.Lastname}", "Details", "JobApplication", new { application.Id })</td>
                             <td>@application.EmailAddress</td>
                             <td>@application.PhoneNumber</td>
                         </tr>
