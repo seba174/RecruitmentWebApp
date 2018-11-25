@@ -4,98 +4,120 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RecrutimentApp.EntityFramework;
 using RecrutimentApp.Models;
 using RecrutimentApp.Utilities;
+using static Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState;
 
 namespace RecrutimentApp.Controllers
 {
     public class JobOfferController : Controller
     {
-        private static List<Company> companies = new List<Company>
-        {
-            new Company() { Id = 1, Name = "Predica"},
-            new Company() { Id = 2, Name = "Microsoft"},
-            new Company() { Id = 3, Name = "Github"}
-        };
+        private readonly DataContext dataContext;
 
-        private static List<JobOffer> jobOffers = new List<JobOffer>()
+        public JobOfferController(DataContext context)
         {
-            new JobOffer
+            dataContext = context;
+            if (dataContext.Companies.Count() < 3)
             {
-                Id = 1,
-                JobTitle = "Backend developer",
-                Company = companies.FirstOrDefault(c => c.Name == "Predica"),
-                Created = DateTime.Now.AddDays(-2),
-                Description = "Backend C# developer with intrests about IoT solutions.",
-                Location = "Poland",
-                SalaryFrom = 2000,
-                SalaryTo = 10000,
-                ValidUntil = DateTime.Now.AddDays(20)
-            },
-            new JobOffer
-            {
-                Id = 2,
-                JobTitle = "Frontend developer",
-                Company = companies.FirstOrDefault(c => c.Name == "Microsoft"),
-                Created = DateTime.Now.AddDays(-2),
-                Description = "Developing Office 365 front end interface.",
-                Location = "Poland",
-                SalaryFrom = 2000,
-                SalaryTo = 10000,
-                ValidUntil = DateTime.Now.AddDays(20)
+                //dataContext.Companies.AddRange(
+                //    new Company() { Name = "Predica" },
+                //    new Company() { Name = "Microsoft" },
+                //    new Company() { Name = "Github" });
+                //dataContext.SaveChanges();
             }
-        };
 
-        public IActionResult Index([FromQuery(Name = "search")] string searchString)
+            if (dataContext.JobOffers.Count() < 2)
+            {
+                //dataContext.JobOffers.AddRange(
+                //new JobOffer
+                //{
+                //    JobTitle = "Backend developer",
+                //    CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Predica")?.Id ?? 0,
+                //    Created = DateTime.Now.AddDays(-2),
+                //    Description = "Backend C# developer with intrests about IoT solutions. The main task would be building API which expose data from phisical devices. Description need to have at least 100 characters so I am adding some. In test case I reccomend you to use Lorem Impsum.",
+                //    Location = "Poland",
+                //    SalaryFrom = 2000,
+                //    SalaryTo = 10000,
+                //    ValidUntil = DateTime.Now.AddDays(20).Date
+                //});
+                //new JobOffer
+                //{
+                //    JobTitle = "Frontend developer",
+                //    CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Microsoft")?.Id ?? 0,
+                //    Created = DateTime.Now.AddDays(-2),
+                //    Description = "Developing Office 365 front end interface.",
+                //    Location = "Poland",
+                //    SalaryFrom = 2000,
+                //    SalaryTo = 10000,
+                //    ValidUntil = DateTime.Now.AddDays(20).Date
+                //});
+
+                dataContext.SaveChanges();
+            }
+        }
+
+        public async Task<ActionResult> Index([FromQuery(Name = "search")] string searchString)
         {
             if (string.IsNullOrEmpty(searchString))
             {
-                return View(jobOffers);
+                return View(dataContext.JobOffers.Join(
+                    dataContext.Companies,
+                    o => o.CompanyId,
+                    c => c.Id,
+                    (o, c) => new JobOffer(o, c)).ToList());
             }
 
-            List<JobOffer> searchResult = jobOffers.FindAll(o => o.JobTitle.Contains(searchString));
+            List<JobOffer> searchResult = await dataContext.JobOffers.Where(o => o.JobTitle.ToLower().Contains(searchString.ToLower())).ToListAsync();
             return View(searchResult);
         }
 
         public IActionResult Details(int id)
         {
-            JobOffer jobOffer = jobOffers.Where(j => j.Id == id).FirstOrDefault();
+            JobOffer jobOffer = dataContext.JobOffers.Where(j => j.Id == id).FirstOrDefault();
             if (jobOffer is null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            return View(jobOffer);
+            jobOffer.JobApplications = dataContext.JobApplications.Where(ja => ja.JobOfferId == jobOffer.Id).ToList();
+
+            return View(new JobOffer(jobOffer, dataContext.Companies.Find(jobOffer.CompanyId)));
         }
 
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id is null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var offer = jobOffers.Find(o => o.Id == id);
+            JobOffer offer = await dataContext.JobOffers.FindAsync(id.Value);
             if (offer is null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            return View(offer);
+            return View(new JobOffer(offer, dataContext.Companies.Find(offer.CompanyId)));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(JobOffer model)
         {
-            if (!ModelState.IsValid)
+            var t = ModelState.IsValid;
+
+            if (ModelState.GetFieldValidationState(nameof(JobOffer.JobTitle)) != Valid || ModelState.GetFieldValidationState(nameof(JobOffer.Description)) != Valid)
             {
                 return View();
             }
 
-            var offer = jobOffers.Find(o => o.Id == model.Id);
+            var offer = await dataContext.JobOffers.FindAsync(model.Id);
             offer.JobTitle = model.JobTitle;
             offer.Description = model.Description;
+
+            await dataContext.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = model.Id });
         }
@@ -109,7 +131,9 @@ namespace RecrutimentApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            jobOffers.RemoveAll(j => j.Id == id);
+            dataContext.JobOffers.Remove(new JobOffer { Id = id.Value });
+            await dataContext.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 
@@ -117,7 +141,7 @@ namespace RecrutimentApp.Controllers
         {
             var model = new JobOfferCreateView
             {
-                Companies = companies
+                Companies = dataContext.Companies
             };
             return View(model);
         }
@@ -128,16 +152,13 @@ namespace RecrutimentApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Companies = companies;
+                model.Companies = dataContext.Companies;
                 return View(model);
             }
 
-            var id = jobOffers.Max(j => j.Id) + 1;
-            jobOffers.Add(new JobOffer
+            JobOffer jobOffer = new JobOffer
             {
-                Id = id,
                 CompanyId = model.CompanyId,
-                Company = companies.FirstOrDefault(c => c.Id == model.CompanyId),
                 Description = model.Description,
                 JobTitle = model.JobTitle,
                 Location = model.Location,
@@ -145,7 +166,11 @@ namespace RecrutimentApp.Controllers
                 SalaryTo = model.SalaryTo,
                 ValidUntil = model.ValidUntil,
                 Created = DateTime.Now
-            });
+            };
+
+            dataContext.JobOffers.Add(jobOffer);
+            await dataContext.SaveChangesAsync();
+
             return RedirectToAction("index");
         }
     }

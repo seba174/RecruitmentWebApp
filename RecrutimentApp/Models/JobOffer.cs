@@ -1,10 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RecrutimentApp.Models
 {
     public class JobOffer
     {
+        public JobOffer()
+        {
+        }
+
+        public JobOffer(JobOffer other, Company company)
+        {
+            Id = other.Id;
+            JobTitle = other.JobTitle;
+            Company = company;
+            CompanyId = company.Id;
+            SalaryFrom = other.SalaryFrom;
+            SalaryTo = other.SalaryTo;
+            Created = other.Created;
+            Location = other.Location;
+            Description = other.Description;
+            ValidUntil = other.ValidUntil;
+            JobApplications = other.JobApplications;
+        }
+
         public int Id { get; set; }
 
         [Display(Name = "Job title")]
@@ -34,5 +54,7 @@ namespace RecrutimentApp.Models
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-DD}")]
         public DateTime? ValidUntil { get; set; }
+
+        public List<JobApplication> JobApplications { get; set; } = new List<JobApplication>();
     }
 }

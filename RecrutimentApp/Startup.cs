@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RecrutimentApp.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 
 namespace RecrutimentApp
 {
@@ -22,6 +24,8 @@ namespace RecrutimentApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=RecruitmentAppDB;Trusted_Connection=True;";
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
