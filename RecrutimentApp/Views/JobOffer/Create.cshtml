@@ -12,9 +12,7 @@
             @Html.AntiForgeryToken()
 
             <div class="form-group">
-                @Html.LabelFor(m => m.JobTitle)
-                @Html.EditorFor(m => m.JobTitle, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.JobTitle, "", new { @class = "text-danger" })
+                @Html.LabelEditorValidationMessageFor(m=> m.JobTitle)
             </div>
 
             <div class="form-group">
@@ -26,46 +24,23 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.Location)
-                @Html.EditorFor(m => m.Location, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Location, "", new { @class = "text-danger" })
+                @Html.LabelEditorValidationMessageFor(m=>m.Location)
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.SalaryFrom)
-                <div class="input-group">
-                    <span class="input-group-addon">PLN</span>
-                    @Html.EditorFor(m => m.SalaryFrom, new { htmlAttributes = new { @class = "form-control", placeholder = "From" } })
-                    <span class="input-group-addon">.00</span>
-                </div>
-                @Html.ValidationMessageFor(m => m.SalaryFrom, "", new { @class = "text-danger" })
+                @Html.LabelMoneyEditorValidationMessageFor(m => m.SalaryFrom, "From")
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.SalaryTo)
-                <div class="input-group">
-                    <span class="input-group-addon">PLN</span>
-                    @Html.EditorFor(m => m.SalaryTo, new { htmlAttributes = new { @class = "form-control", placeholder = "To" } })
-                    <span class="input-group-addon">.00</span>
-                </div>
-                @Html.ValidationMessageFor(m => m.SalaryTo, "", new { @class = "text-danger" })
+                @Html.LabelMoneyEditorValidationMessageFor(m => m.SalaryTo, "To")
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.ValidUntil)
-                <div class="input-group">
-                    @Html.EditorFor(m => m.ValidUntil, new { htmlAttributes = new { @class = "form-control" } })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-                @Html.ValidationMessageFor(m => m.ValidUntil, "", new { @class = "text-danger" })
+                @Html.LabelCalendarEditorValidationMessageFor(m => m.ValidUntil)
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.Description)
-                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter description" })
-                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                @Html.LabelTextAreaValidationMessageFor(m => m.Description, "Enter description")
             </div>
 
             <div class="form-group">
