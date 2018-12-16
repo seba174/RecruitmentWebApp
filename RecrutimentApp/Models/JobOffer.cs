@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Models
 {
@@ -36,9 +37,12 @@ namespace RecrutimentApp.Models
         public virtual int CompanyId { get; set; }
 
         [Display(Name = "Salary from")]
+        [GreaterThanZero]
+        [MoneyNotGreaterThan(nameof(SalaryTo))]
         public decimal? SalaryFrom { get; set; }
 
         [Display(Name = "Salary to")]
+        [GreaterThanZero]
         public decimal? SalaryTo { get; set; }
 
         public DateTime Created { get; set; }
@@ -53,6 +57,7 @@ namespace RecrutimentApp.Models
         [Display(Name = "Valid until")]
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-DD}")]
+        [NotPastDate]
         public DateTime? ValidUntil { get; set; }
 
         public List<JobApplication> JobApplications { get; set; } = new List<JobApplication>();
