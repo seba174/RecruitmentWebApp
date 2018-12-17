@@ -58,19 +58,9 @@ namespace RecrutimentApp.Controllers
             //}
         }
 
-        public async Task<ActionResult> Index([FromQuery(Name = "search")] string searchString)
+        public ActionResult Index()
         {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                return View(await dataContext.JobOffers.Join(
-                    dataContext.Companies,
-                    o => o.CompanyId,
-                    c => c.Id,
-                    (o, c) => new JobOffer(o, c)).ToListAsync());
-            }
-
-            List<JobOffer> searchResult = await dataContext.JobOffers.Where(o => o.JobTitle.ToLower().Contains(searchString.ToLower())).ToListAsync();
-            return View(searchResult);
+            return View();
         }
 
         public async Task<ActionResult> Details(int id)
@@ -119,7 +109,7 @@ namespace RecrutimentApp.Controllers
 
             await dataContext.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = model.Id });
+            return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 
         [HttpPost]
@@ -134,7 +124,7 @@ namespace RecrutimentApp.Controllers
             dataContext.JobOffers.Remove(new JobOffer { Id = id.Value });
             await dataContext.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<ActionResult> Create()
@@ -171,7 +161,7 @@ namespace RecrutimentApp.Controllers
             await dataContext.JobOffers.AddAsync(jobOffer);
             await dataContext.SaveChangesAsync();
 
-            return RedirectToAction("index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -19,15 +19,9 @@ namespace RecrutimentApp.Controllers
             dataContext = context;
         }
 
-        public async Task<ActionResult> Index([FromQuery(Name = "search")] string searchString)
+        public ActionResult Index()
         {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                return View(await dataContext.Companies.ToListAsync());
-            }
-
-            List<Company> searchResult = await dataContext.Companies.Where(o => o.Name.ToLower().Contains(searchString.ToLower())).ToListAsync();
-            return View(searchResult);
+            return View();
         }
 
         public async Task<ActionResult> Details(int id)
@@ -87,7 +81,7 @@ namespace RecrutimentApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
             return View(new Company());
         }
