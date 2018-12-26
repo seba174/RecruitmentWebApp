@@ -8,7 +8,7 @@
             <input type="text" class="form-control" placeholder="Search offer by title..."
                    name="search" id="search" />
             <span class="input-group-btn">
-                <button class="btn btn-info" onclick="find();">
+                <button class="btn btn-info" onclick="find();" id="searchButton">
                     <i class="glyphicon glyphicon-search"></i>
                 </button>
             </span>
@@ -26,7 +26,7 @@
             <tbody id="records_table" />
         </table>
 
-        @Html.ActionLink("Create job offer", "Create", "JobOffer", null, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Create job offer", "Create", "JobOffer", null, new { id = "createJobOffer", @class = "btn btn-primary" })
     </div>
 </div>
 

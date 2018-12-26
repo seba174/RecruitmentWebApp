@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,10 @@ namespace RecrutimentApp.Controllers
     {
         private readonly DataContext dataContext;
 
-        public SampleApiController(DataContext dataContext) => this.dataContext = dataContext;
+        public SampleApiController(DataContext dataContext)
+        {
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+        }
 
         [HttpGet]
         [HttpGet("{searchString}")]
