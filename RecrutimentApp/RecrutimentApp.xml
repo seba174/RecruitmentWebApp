@@ -4,14 +4,15 @@
         <name>RecrutimentApp</name>
     </assembly>
     <members>
-        <member name="M:RecrutimentApp.Controllers.SampleApiController.GetJobOffers(System.String)">
+        <member name="M:RecrutimentApp.Controllers.SampleApiController.GetJobOffers(System.String,System.Int32)">
             <summary>
-            Gets job offers which title contains given string
+            Gets job offers which title contains given string (provided page)
             </summary>
             <remarks>
             If searchString is null or empty, all job offers are returned. 
             </remarks>
             <param name="searchString">Search string which will be used to filter job offers</param>
+            <param name="pageNo">Page number</param>
             <returns>Job offers which title contains given string</returns>
         </member>
         <member name="M:RecrutimentApp.Controllers.SampleApiController.GetJobApplications(System.Int32)">

@@ -22,31 +22,56 @@ namespace RecrutimentApp.Controllers
         }
 
         /// <summary>
-        /// Gets job offers which title contains given string
+        /// Gets job offers which title contains given string (provided page)
         /// </summary>
         /// <remarks>
         /// If searchString is null or empty, all job offers are returned. 
         /// </remarks>
         /// <param name="searchString">Search string which will be used to filter job offers</param>
+        /// <param name="pageNo">Page number</param>
         /// <returns>Job offers which title contains given string</returns>
         [HttpGet]
-        [HttpGet("{searchString}")]
-        public async Task<IEnumerable<JobOffer>> GetJobOffers(string searchString)
+        public async Task<JobOfferPagingViewModel> GetJobOffers(string searchString, int pageNo = 1)
         {
+            int totalRecord, pageSize = 10;
+
+            IEnumerable<JobOffer> offers = null;
             if (string.IsNullOrEmpty(searchString))
             {
-                return await dataContext.JobOffers.Join(
+                totalRecord = dataContext.JobOffers.Count();
+                offers = await dataContext.JobOffers
+                .Join(
                     dataContext.Companies,
                     o => o.CompanyId,
                     c => c.Id,
-                    (o, c) => new JobOffer(o, c)).ToListAsync();
+                    (o, c) => new JobOffer(o, c))
+                .OrderBy(o => o.JobTitle)
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();     
+            }
+            else
+            {
+                totalRecord = dataContext.JobOffers.Where(o => o.JobTitle.ToLower().Contains(searchString.ToLower())).Count();
+                offers = await dataContext.JobOffers.Where(o => o.JobTitle.ToLower().Contains(searchString.ToLower()))
+                .Join(
+                    dataContext.Companies,
+                    o => o.CompanyId,
+                    c => c.Id,
+                    (o, c) => new JobOffer(o, c))
+                .OrderBy(o => o.JobTitle)
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
             }
 
-            return await dataContext.JobOffers.Where(o => o.JobTitle.ToLower().Contains(searchString.ToLower())).Join(
-                dataContext.Companies,
-                o => o.CompanyId,
-                c => c.Id,
-                (o, c) => new JobOffer(o, c)).ToListAsync();
+            int totalPage = (totalRecord / pageSize) + ((totalRecord % pageSize) > 0 ? 1 : 0);
+
+            return new JobOfferPagingViewModel
+            {
+                JobOffers = offers,
+                TotalPage = totalPage
+            };
         }
 
         /// <summary>

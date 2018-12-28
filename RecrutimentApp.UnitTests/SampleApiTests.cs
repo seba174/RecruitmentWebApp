@@ -49,7 +49,7 @@ namespace RecrutimentApp.UnitTests
             {
                 var jobOffers = await apiController.GetJobOffers(searchString);
 
-                Assert.Empty(jobOffers);
+                Assert.Empty(jobOffers.JobOffers);
             }
 
             [Theory]
@@ -61,7 +61,7 @@ namespace RecrutimentApp.UnitTests
 
                 var jobOffers = await apiController.GetJobOffers(searchString);
 
-                Assert.True(jobOffers.Count() == 1);
+                Assert.True(jobOffers.JobOffers.Count() == 1);
             }
 
             [Theory]
@@ -73,7 +73,7 @@ namespace RecrutimentApp.UnitTests
 
                 var jobOffers = await apiController.GetJobOffers(searchString);
 
-                Assert.True(jobOffers.Count() == 2);
+                Assert.True(jobOffers.JobOffers.Count() == 2);
             }
 
             private void AddTwoOffersAndThreeCompaniesToDatabase()

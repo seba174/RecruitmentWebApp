@@ -1,30 +1,62 @@
 ﻿@model JobOfferCreateView
-
 @{
     ViewData["Title"] = "Create";
 }
 
-<div class="row page-box">
+<div class="row page-box mt-3">
     <div class="col-sm-12">
-        <h2>New Job Offer</h2>
+        <h2 class="mb-4">New Job Offer</h2>
         @using (Html.BeginForm("Create"))
         {
             @Html.AntiForgeryToken()
 
             <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m=> m.JobTitle)
+                @Html.LabelEditorValidationMessageFor(m => m.JobTitle)
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.Company)
-                @Html.DropDownListFor(m => m.CompanyId,
-                    Model.Companies.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() }),
-                    new { @class = "form-control" })
+                @Html.LabelFor(m => m.Company, new { @class = "font-weight-bold" })
+                @Html.DropDownListFor(m => m.CompanyId, new SelectListItem[0],
+                 new {
+                     @class = "form-control",
+                     data_bind = "options: companies, optionsText: 'name', optionsValue: 'id', value: selectedCompany"
+                 })
                 @Html.ValidationMessageFor(m => m.CompanyId, "", new { @class = "text-danger" })
+
+                @*<div>
+                        <span data-bind="text: headquater"></span>
+                    </div>
+                    <table class="table">
+                            <tbody id="companyBindingInformations">
+                                <tr>
+                                    <td align="right" width="90%">Test: </td>
+                                    <td align="right"><span data-bind="text: headquater"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <div class="col-sm-9">
+                        <div class="offer-description" id="previewMarkdown">
+                            @Model.Description
+                        </div>
+                    </div>*@
+                @*<div>
+                        @Html.LabelFor(m => m.Company.HeadquaterLocation, new { @class = "text-right" }):
+                        <span class="text-right" data-bind="text: headquater"></span>
+                    </div>*@
+            </div>
+            <div class="form-group d-flex flex-row">
+                <div class="p-2">Flex item 1</div>
+                <div class="p-2">Flex item 2</div>
+                <div class="p-2">Flex item 3</div>
+            </div>
+            <div class="d-flex flex-row-reverse">
+                <div class="p-2">Flex item 1</div>
+                <div class="p-2">Flex item 2</div>
+                <div class="p-2">Flex item 3</div>
             </div>
 
             <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m=>m.Location)
+                @Html.LabelEditorValidationMessageFor(m => m.Location)
             </div>
 
             <div class="form-group">
@@ -50,3 +82,23 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            ko.applyBindings(new ViewModel());
+        });
+
+        function ViewModel() {
+            var self = this;
+
+            self.companies = @Json.Serialize(Model.Companies);
+            self.selectedCompany = ko.observable();
+
+            this.headquater = ko.computed(function () {
+                if (self.selectedCompany())
+                    return self.companies[self.selectedCompany() - 1].headquaterLocation;
+            });
+        }
+    </script>
+}

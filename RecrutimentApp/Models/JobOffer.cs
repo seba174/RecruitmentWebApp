@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Models
@@ -39,10 +40,12 @@ namespace RecrutimentApp.Models
         [Display(Name = "Salary from")]
         [GreaterThanZero]
         [MoneyNotGreaterThan(nameof(SalaryTo))]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? SalaryFrom { get; set; }
 
         [Display(Name = "Salary to")]
         [GreaterThanZero]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? SalaryTo { get; set; }
 
         public DateTime Created { get; set; }

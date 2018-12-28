@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<JobOffer>
 
-<div class="row page-box">
+<div class="row page-box mt-3">
     <div class="col-sm-12">
         <h2>Job Offers list</h2>
 
-        <div class="input-group col-md-12" style="margin-bottom: 14px">
+        <div class="input-group col-sm-12 mt-3 mb-4">
             <input type="text" class="form-control" placeholder="Search offer by title..."
                    name="search" id="search" />
             <span class="input-group-btn">
-                <button class="btn btn-info" onclick="find();" id="searchButton">
-                    <i class="glyphicon glyphicon-search"></i>
+                <button class="btn btn-info" id="searchButton">
+                    <i class="fas fa-search"></i>
                 </button>
             </span>
         </div>
@@ -25,6 +25,9 @@
             </thead>
             <tbody id="records_table" />
         </table>
+        <table class="table">
+            <tbody id="records_table_pages" />
+        </table>
 
         @Html.ActionLink("Create job offer", "Create", "JobOffer", null, new { id = "createJobOffer", @class = "btn btn-primary" })
     </div>
@@ -34,24 +37,64 @@
     <script>
         var uri = '/api/SampleApi/GetJobOffers';
 
-        $(document).ready(find);
+        $(document).ready(function () {
+            var currentPage = 1;
+            find(currentPage);
 
-        function find() {
-            var uriToRequest = uri;
-            var searchString = $('#search').val();
-            if (searchString != "")
-                uriToRequest = uri + "/" + searchString;
-            $.getJSON(uriToRequest)
-                .done(function (data) {
-                    var c = [];
-                    $.each(data, function (_key, item) {
-                        c.push("<tr><td><a href=\"JobOffer/Details?id=" + item.id + "\">" + item.jobTitle + "<a></td>");
-                        c.push("<td>" + item.company.name + "</td>");
-                        c.push("<td>" + item.location + "</td>");
-                        c.push("<td>" + new Date(item.created).toUTCString() + "</td></tr>");
+            $('#records_table_pages').on('click', '.footerContent a', function (e) {
+                e.preventDefault();
+                var pageNo = parseInt($(this).html());
+                currentPage = pageNo;
+                find(currentPage);
+            });
+
+            $('#searchButton').click(function () {
+                currentPage = 1;
+                find(currentPage);
+            });
+
+            function find(pageNo) {
+                var uriToRequest = uri;
+                var searchString = $('#search').val();
+                $.getJSON(uriToRequest, { searchString: searchString, pageNo: pageNo })
+                    .done(function (data) {
+                        var c = [];
+                        $.each(data.jobOffers, function (_key, item) {
+                            c.push("<tr><td><a href=\"JobOffer/Details?id=" + item.id + "\">" + item.jobTitle + "<a></td>");
+                            c.push("<td>" + item.company.name + "</td>");
+                            c.push("<td>" + item.location + "</td>");
+                            c.push("<td>" + new Date(item.created).toUTCString() + "</td></tr>");
+                        });
+
+                        var totalPage = parseInt(data.totalPage);
+                        var $footer = $('<tr/>');
+                        var $footerTD = $('<td/>').attr('colspan', 4).attr('align', 'right').addClass('footerContent');
+
+                        if (totalPage > 0) {
+                            for (var i = 1; i <= totalPage; i++) {
+                                var $page = $('<span/>').addClass((i == currentPage) ? "current" : "");
+
+                                if (i == currentPage) {
+                                    $page.addClass("btn btn-outline-dark active");
+                                    $page.html(i);
+                                }
+                                else {
+                                    var $a = $('<a/>');
+                                    $a.addClass("btn btn-outline-dark");
+                                    $a.attr('href', "#");
+                                    $a.html(i);
+                                    $page.html($a);
+                                }
+
+                                $footerTD.append($page);
+                            }
+                            $footer.append($footerTD);
+                        }
+
+                        $('#records_table').html(c.join(""));
+                        $('#records_table_pages').html($footer);
                     });
-                    $('#records_table').html(c.join(""))
-                });
-        }
+            }
+        });
     </script>
 }
