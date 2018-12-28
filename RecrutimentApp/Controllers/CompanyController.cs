@@ -58,6 +58,7 @@ namespace RecrutimentApp.Controllers
             var company = await dataContext.Companies.FindAsync(model.Id);
             company.Name = model.Name;
             company.HeadquaterLocation = model.HeadquaterLocation;
+            company.WebSiteUrl = model.WebSiteUrl;
 
             await dataContext.SaveChangesAsync();
 

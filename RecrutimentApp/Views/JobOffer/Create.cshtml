@@ -15,44 +15,32 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.Company, new { @class = "font-weight-bold" })
+                @Html.BoldLabelFor(m => m.Company)
                 @Html.DropDownListFor(m => m.CompanyId, new SelectListItem[0],
                  new {
                      @class = "form-control",
-                     data_bind = "options: companies, optionsText: 'name', optionsValue: 'id', value: selectedCompany"
+                     data_bind = "options: companies, optionsText: 'name', optionsValue: 'id', value: selectedCompanyId"
                  })
                 @Html.ValidationMessageFor(m => m.CompanyId, "", new { @class = "text-danger" })
+            </div>
 
-                @*<div>
-                        <span data-bind="text: headquater"></span>
-                    </div>
-                    <table class="table">
-                            <tbody id="companyBindingInformations">
-                                <tr>
-                                    <td align="right" width="90%">Test: </td>
-                                    <td align="right"><span data-bind="text: headquater"></span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    <div class="col-sm-9">
-                        <div class="offer-description" id="previewMarkdown">
-                            @Model.Description
-                        </div>
-                    </div>*@
-                @*<div>
-                        @Html.LabelFor(m => m.Company.HeadquaterLocation, new { @class = "text-right" }):
-                        <span class="text-right" data-bind="text: headquater"></span>
-                    </div>*@
-            </div>
-            <div class="form-group d-flex flex-row">
-                <div class="p-2">Flex item 1</div>
-                <div class="p-2">Flex item 2</div>
-                <div class="p-2">Flex item 3</div>
-            </div>
             <div class="d-flex flex-row-reverse">
-                <div class="p-2">Flex item 1</div>
-                <div class="p-2">Flex item 2</div>
-                <div class="p-2">Flex item 3</div>
+                <div class="p-2">
+                    <div>
+                        <label data-bind="text: headquater"></label>
+                    </div>
+                    <div>
+                        <label data-bind="text: website"></label>
+                    </div>
+                </div>
+                <div class="p-2">
+                    <div>
+                        @Html.BoldLabelFor(m => m.Company.HeadquaterLocation):
+                    </div>
+                    <div class="float-right">
+                        @Html.BoldLabelFor(m => m.Company.WebSiteUrl):
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -93,11 +81,26 @@
             var self = this;
 
             self.companies = @Json.Serialize(Model.Companies);
-            self.selectedCompany = ko.observable();
+            self.selectedCompanyId = ko.observable();
 
-            this.headquater = ko.computed(function () {
-                if (self.selectedCompany())
-                    return self.companies[self.selectedCompany() - 1].headquaterLocation;
+            self.isCompanySelected = function () {
+                return self.selectedCompanyId() != undefined;
+            }
+
+            self.getSelectedCompany = function () {
+                var id = self.selectedCompanyId();
+                return self.companies.find(function (item) {
+                    return item.id === id;
+                });
+            }
+
+            self.headquater = ko.computed(function () {
+                if (self.isCompanySelected())
+                    return self.getSelectedCompany().headquaterLocation;
+            });
+            self.website = ko.computed(function () {
+                if (self.isCompanySelected())
+                    return self.getSelectedCompany().webSiteUrl;
             });
         }
     </script>

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace RecrutimentApp.Models
@@ -13,5 +14,10 @@ namespace RecrutimentApp.Models
         [Required]
         [Display(Name = "Headquater location")]
         public string HeadquaterLocation { get; set; }
+
+        [Required]
+        [DataType(DataType.Url)]
+        [Display(Name = "Website")]
+        public string WebSiteUrl { get; set; }
     }
 }

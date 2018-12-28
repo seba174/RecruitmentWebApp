@@ -15,6 +15,10 @@
             @Html.LabelEmptyLineDisplayFor(m => m.HeadquaterLocation)
         </div>
 
+        <div class="form-group">
+            @Html.LabelEmptyLineDisplayFor(m => m.WebSiteUrl)
+        </div>
+
         @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-primary" })
         @using (Html.BeginForm("Delete", "Company", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
         {

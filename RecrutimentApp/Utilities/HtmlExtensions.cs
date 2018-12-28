@@ -7,10 +7,14 @@ namespace RecrutimentApp
 {
     public static class HtmlExtensions
     {
+        public static IHtmlContent BoldLabelFor<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression)
+        {
+            return htmlHelper.LabelFor(expression, new { @class = "font-weight-bold" });
+        }
         public static IHtmlContent LabelForWithEmptyLine<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression)
         {
             HtmlContentBuilder contentBuilder = new HtmlContentBuilder(2);
-            contentBuilder.AppendHtml(htmlHelper.LabelFor(expression, new { @class= "font-weight-bold" }));
+            contentBuilder.AppendHtml(BoldLabelFor(htmlHelper, expression));
             contentBuilder.AppendHtml(new HtmlString("<br/>"));
             return contentBuilder;
         }
@@ -26,7 +30,7 @@ namespace RecrutimentApp
         public static IHtmlContent LabelEditorValidationMessageFor<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression)
         {
             HtmlContentBuilder contentBuilder = new HtmlContentBuilder(3);
-            contentBuilder.AppendHtml(htmlHelper.LabelFor(expression, new { @class = "font-weight-bold"}));
+            contentBuilder.AppendHtml(BoldLabelFor(htmlHelper, expression));
             contentBuilder.AppendHtml(htmlHelper.EditorFor(expression, new { htmlAttributes = new { @class = "form-control" } }));
             contentBuilder.AppendHtml(htmlHelper.ValidationMessageFor(expression, "", new { @class = "text-danger" }));
             return contentBuilder;
@@ -36,7 +40,7 @@ namespace RecrutimentApp
             Expression<Func<TModel, TResult>> expression, string placeholder = "")
         {
             HtmlContentBuilder contentBuilder = new HtmlContentBuilder(3);
-            contentBuilder.AppendHtml(htmlHelper.LabelFor(expression, new { @class = "font-weight-bold" }));
+            contentBuilder.AppendHtml(BoldLabelFor(htmlHelper, expression));
             contentBuilder.AppendHtml(htmlHelper.TextAreaFor(expression, new { @class = "form-control", placeholder }));
             contentBuilder.AppendHtml(htmlHelper.ValidationMessageFor(expression, "", new { @class = "text-danger" }));
             return contentBuilder;
@@ -45,7 +49,7 @@ namespace RecrutimentApp
         public static IHtmlContent LabelCalendarEditorValidationMessageFor<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression)
         {
             HtmlContentBuilder contentBuilder = new HtmlContentBuilder(9);
-            contentBuilder.AppendHtml(htmlHelper.LabelFor(expression, new { @class = "font-weight-bold" }));
+            contentBuilder.AppendHtml(BoldLabelFor(htmlHelper, expression));
             contentBuilder.AppendHtml(new HtmlString("<div class=\"input-group\">"));
             contentBuilder.AppendHtml(htmlHelper.EditorFor(expression, new { htmlAttributes = new { @class = "form-control" } }));
             contentBuilder.AppendHtml(new HtmlString("<div class=\"input-group-append\">"));
@@ -61,7 +65,7 @@ namespace RecrutimentApp
             Expression<Func<TModel, TResult>> expression, string placeholder = "")
         {
             HtmlContentBuilder contentBuilder = new HtmlContentBuilder(7);
-            contentBuilder.AppendHtml(htmlHelper.LabelFor(expression, new { @class = "font-weight-bold" }));
+            contentBuilder.AppendHtml(BoldLabelFor(htmlHelper, expression));
             contentBuilder.AppendHtml(new HtmlString("<div class=\"input-group\">"));
             contentBuilder.AppendHtml(new HtmlString("<div class=\"input-group-prepend\"><span class=\"input-group-text\">PLN</span></div>"));
             contentBuilder.AppendHtml(htmlHelper.EditorFor(expression, new { htmlAttributes = new { @class = "form-control", placeholder } }));
