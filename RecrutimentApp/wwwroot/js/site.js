@@ -20,7 +20,7 @@
                     return true;
 
                 var currentDate = new Date();
-                if (dateFromInput.getDate() < currentDate.getDate())
+                if (dateFromInput < currentDate)
                     return false;
             }
             return true;

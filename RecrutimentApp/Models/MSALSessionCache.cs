@@ -59,9 +59,6 @@ namespace CommunityCertForT.Models
         {
             SessionLock.EnterWriteLock();
 
-            // Optimistically set HasStateChanged to false. We need to do it early to avoid losing changes made by a concurrent thread.
-            cache.HasStateChanged = false;
-
             // Reflect changes in the persistent store
             httpContext.Session.Set(CacheId, cache.Serialize());
             SessionLock.ExitWriteLock();
@@ -78,7 +75,7 @@ namespace CommunityCertForT.Models
         void AfterAccessNotification(TokenCacheNotificationArgs args)
         {
             // if the access operation resulted in a cache update
-            if (cache.HasStateChanged)
+            if (args.HasStateChanged)
             {
                 Persist();
             }
