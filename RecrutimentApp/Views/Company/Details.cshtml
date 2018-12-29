@@ -19,11 +19,14 @@
             @Html.LabelEmptyLineDisplayFor(m => m.WebSiteUrl)
         </div>
 
-        @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-primary" })
-        @using (Html.BeginForm("Delete", "Company", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+        @if (User.IsInRole(Roles.Admin))
         {
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-danger">Delete</button>
+            @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-primary" })
+            @using (Html.BeginForm("Delete", "Company", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger">Delete</button>
+            }
         }
     </div>
 </div>

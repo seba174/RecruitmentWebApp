@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using CommunityCertForT.Helpers;
+using CommunityCertForT.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Identity.Client;
-using System.Security.Claims;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using Microsoft.Extensions.Configuration;
-using CommunityCertForT.Models;
+using RecrutimentApp.Utilities;
 
 namespace CommunityCertForT
 {
@@ -57,8 +56,22 @@ namespace CommunityCertForT
                 {
                     OnRedirectToIdentityProvider = OnRedirectToIdentityProvider,
                     OnRemoteFailure = OnRemoteFailure,
-                    OnAuthorizationCodeReceived = OnAuthorizationCodeReceived
+                    OnAuthorizationCodeReceived = OnAuthorizationCodeReceived,
+                    OnTokenValidated = OnTokenValidated
                 };
+            }
+
+            private async Task OnTokenValidated(TokenValidatedContext arg)
+            {
+                AADGraph graph = new AADGraph(_appSettings);
+                string groupName = "Admins";
+                string groupId = _appSettings.AADGroups.FirstOrDefault(g => g.Name == groupName)?.Id;
+                bool isAdmin = await graph.IsUserInGroup(arg.Principal.Claims, groupId);
+                if (isAdmin)
+                {
+                    arg.Principal.AddIdentity(new ClaimsIdentity(
+                        new Claim[] { new Claim(Roles.Admin, Roles.Admin) }, string.Empty, string.Empty, Roles.Admin));
+                }
             }
 
             public void Configure(OpenIdConnectOptions options)
@@ -120,7 +133,7 @@ namespace CommunityCertForT
                 {
                     country = context.Principal.FindFirst("Country").Value;
                 }
-                
+
                 TokenCache userTokenCache = new MSALSessionCache(signedInUserID, context.HttpContext).GetMsalCacheInstance();
                 ConfidentialClientApplication cca = new ConfidentialClientApplication(AzureAdB2COptions.ClientId, AzureAdB2COptions.Authority, AzureAdB2COptions.RedirectUri, new ClientCredential(AzureAdB2COptions.ClientSecret), userTokenCache, null);
                 try

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,7 +47,8 @@ namespace RecrutimentApp
             services.AddDistributedMemoryCache();
             services.AddSession();
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             var connection = @"Server=(localdb)\mssqllocaldb;Database=RecruitmentAppDB;Trusted_Connection=True;";
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
 

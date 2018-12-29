@@ -47,13 +47,18 @@
                 <span>@Model.ValidUntil.Value.Subtract(DateTime.Now).Days days (@Model.ValidUntil.Value.ToShortDateString())</span>
             </div>
         }
+
         <div>
             @Html.ActionLink("Apply now", "Create", "JobApplication", new { offerId = Model.Id }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
-            @using (Html.BeginForm("Delete", "JobOffer", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+
+            @if (User.IsInRole(Roles.Admin))
             {
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-danger">Delete</button>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                @using (Html.BeginForm("Delete", "JobOffer", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                }
             }
         </div>
     </div>

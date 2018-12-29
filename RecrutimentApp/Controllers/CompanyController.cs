@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecrutimentApp.EntityFramework;
@@ -10,6 +11,7 @@ using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Controllers
 {
+    [Authorize]
     public class CompanyController : Controller
     {
         private readonly DataContext dataContext;
@@ -35,6 +37,7 @@ namespace RecrutimentApp.Controllers
             return View(company);
         }
 
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Edit(int id)
         {
             Company company = await dataContext.Companies.FindAsync(id);
@@ -48,6 +51,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Edit(Company model)
         {
             if (!ModelState.IsValid)
@@ -67,6 +71,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -82,6 +87,7 @@ namespace RecrutimentApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = Roles.Admin)]
         public ActionResult Create()
         {
             return View(new Company());
@@ -89,6 +95,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Create(Company model)
         {
             if (!ModelState.IsValid)

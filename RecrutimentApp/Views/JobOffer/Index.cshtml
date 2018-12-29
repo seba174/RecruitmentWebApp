@@ -29,7 +29,10 @@
             <tbody id="records_table_pages" />
         </table>
 
-        @Html.ActionLink("Create job offer", "Create", "JobOffer", null, new { id = "createJobOffer", @class = "btn btn-primary" })
+        @if (User.IsInRole(Roles.Admin))
+        {
+            @Html.ActionLink("Create job offer", "Create", "JobOffer", null, new { id = "createJobOffer", @class = "btn btn-primary" })
+        }
     </div>
 </div>
 

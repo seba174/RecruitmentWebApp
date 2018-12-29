@@ -26,7 +26,10 @@
             <tbody id="records_table" />
         </table>
 
-        @Html.ActionLink("Add company", "Create", "Company", null, new { @class = "btn btn-primary" })
+        @if (User.IsInRole(Roles.Admin))
+        {
+            @Html.ActionLink("Add company", "Create", "Company", null, new { @class = "btn btn-primary" })
+        }
     </div>
 </div>
 

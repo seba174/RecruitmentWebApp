@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecrutimentApp.EntityFramework;
@@ -12,6 +12,7 @@ using static Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState;
 
 namespace RecrutimentApp.Controllers
 {
+    [Authorize]
     public class JobOfferController : Controller
     {
         private readonly DataContext dataContext;
@@ -76,6 +77,7 @@ namespace RecrutimentApp.Controllers
             return View(new JobOffer(jobOffer, await dataContext.Companies.FindAsync(jobOffer.CompanyId)));
         }
 
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id is null)
@@ -94,6 +96,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Edit(JobOffer model)
         {
             var t = ModelState.IsValid;
@@ -114,6 +117,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id is null)
@@ -138,6 +142,7 @@ namespace RecrutimentApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Create(JobOfferCreateView model)
         {
             if (!ModelState.IsValid)

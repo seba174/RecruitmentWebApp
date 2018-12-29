@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecrutimentApp.EntityFramework;
 using RecrutimentApp.Models;
@@ -7,6 +8,7 @@ using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Controllers
 {
+    [Authorize]
     public class JobApplicationController : Controller
     {
         private readonly DataContext dataContext;
