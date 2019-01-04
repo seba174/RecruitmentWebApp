@@ -27,9 +27,12 @@
             @Html.LabelEmptyLineDisplayFor(m => m.DateOfBirth)
         </div>
 
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.CvUrl)
-        </div>
+        @if (User.IsInRole(Roles.Admin))
+        {
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.CvUrl)
+            </div>
+        }
     </div>
 </div>
 

@@ -70,7 +70,7 @@ namespace CommunityCertForT
                 if (isAdmin)
                 {
                     arg.Principal.AddIdentity(new ClaimsIdentity(
-                        new Claim[] { new Claim(Roles.Admin, Roles.Admin) }, string.Empty, string.Empty, Roles.Admin));
+                        new Claim[] { new Claim(ClaimTypes.Role, Roles.Admin) }));
                 }
             }
 

@@ -1,4 +1,7 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+
 namespace RecrutimentApp.Models
 {
     public class JobApplicationWithOfferName : JobApplication
@@ -19,5 +22,10 @@ namespace RecrutimentApp.Models
         }
 
         public string OfferName { get; set; }
+
+        [Required]
+        [Display(Name = "Curriculum vitae")]
+        [DataType(DataType.Upload)]
+        public IFormFile File { get; set; }
     }
 }

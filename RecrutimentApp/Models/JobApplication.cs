@@ -33,9 +33,8 @@ namespace RecrutimentApp.Models
 
         public bool ContactAgreement { get; set; }
 
-        [Required]
         [DataType(DataType.Url)]
-        [Display(Name = "Url to CV")]
+        [Display(Name = "Curriculum vitae")]
         public string CvUrl { get; set; }
     }
 }

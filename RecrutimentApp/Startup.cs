@@ -49,7 +49,7 @@ namespace RecrutimentApp
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=RecruitmentAppDB;Trusted_Connection=True;";
+            var connection = Configuration.GetConnectionString("DataBase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
 
             services.AddSwaggerGen(c =>
