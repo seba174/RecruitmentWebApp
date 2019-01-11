@@ -20,43 +20,6 @@ namespace RecrutimentApp.Controllers
         public JobOfferController(DataContext context)
         {
             dataContext = context;
-            //if (dataContext.Companies.Count() < 3)
-            //{
-            //    dataContext.Companies.AddRange(
-            //        new Company() { Name = "Predica", HeadquaterLocation = "Warsaw" },
-            //        new Company() { Name = "Microsoft", HeadquaterLocation = "Redmond" },
-            //        new Company() { Name = "Github", HeadquaterLocation = "San Francisco" });
-            //    dataContext.SaveChanges();
-            //}
-
-            //if (dataContext.JobOffers.Count() < 2)
-            //{
-            //    dataContext.JobOffers.AddRange(
-            //    new JobOffer
-            //    {
-            //        JobTitle = "Backend developer",
-            //        CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Predica")?.Id ?? 0,
-            //        Created = DateTime.Now.AddDays(-2),
-            //        Description = "Backend C# developer with intrests about IoT solutions. The main task would be building API which expose data from phisical devices. Description need to have at least 100 characters so I am adding some. In test case I reccomend you to use Lorem Impsum.",
-            //        Location = "Poland",
-            //        SalaryFrom = 2000,
-            //        SalaryTo = 10000,
-            //        ValidUntil = DateTime.Now.AddDays(20).Date
-            //    },
-            //    new JobOffer
-            //    {
-            //        JobTitle = "Frontend developer",
-            //        CompanyId = dataContext.Companies.FirstOrDefault(c => c.Name == "Microsoft")?.Id ?? 0,
-            //        Created = DateTime.Now.AddDays(-2),
-            //        Description = "Developing Office 365 front end interface.",
-            //        Location = "Poland",
-            //        SalaryFrom = 2000,
-            //        SalaryTo = 10000,
-            //        ValidUntil = DateTime.Now.AddDays(20).Date
-            //    });
-
-            //    dataContext.SaveChanges();
-            //}
         }
 
         public ActionResult Index()
@@ -131,6 +94,7 @@ namespace RecrutimentApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Create()
         {
             var model = new JobOfferCreateView

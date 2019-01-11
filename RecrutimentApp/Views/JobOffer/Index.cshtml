@@ -14,7 +14,7 @@
             </span>
         </div>
 
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id="recordsTable" style="display:none">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Job Title</th>
@@ -23,10 +23,10 @@
                     <th scope="col">Created</th>
                 </tr>
             </thead>
-            <tbody id="records_table" />
+            <tbody id="recordsGrid" />
         </table>
         <table class="table">
-            <tbody id="records_table_pages" />
+            <tbody id="recordsTablePages" style="display:none" />
         </table>
 
         @if (User.IsInRole(Roles.Admin))
@@ -44,7 +44,7 @@
             var currentPage = 1;
             find(currentPage);
 
-            $('#records_table_pages').on('click', '.footerContent a', function (e) {
+            $('#recordsTablePages').on('click', '.footerContent a', function (e) {
                 e.preventDefault();
                 var pageNo = parseInt($(this).html());
                 currentPage = pageNo;
@@ -56,10 +56,16 @@
                 find(currentPage);
             });
 
+            $('#search').keyup(function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    $('#searchButton').click();
+                }
+            });
+
             function find(pageNo) {
-                var uriToRequest = uri;
                 var searchString = $('#search').val();
-                $.getJSON(uriToRequest, { searchString: searchString, pageNo: pageNo })
+                $.getJSON(uri, { searchString: searchString, pageNo: pageNo })
                     .done(function (data) {
                         var c = [];
                         $.each(data.jobOffers, function (_key, item) {
@@ -93,9 +99,15 @@
                             }
                             $footer.append($footerTD);
                         }
+                        $('#recordsTable').hide();
+                        $('#recordsTablePages').hide();
 
-                        $('#records_table').html(c.join(""));
-                        $('#records_table_pages').html($footer);
+                        $('#recordsGrid').html(c.join(""));
+                        $('#recordsTablePages').html($footer);
+
+                        $('#recordsTable').show(400, function () {
+                            $('#recordsTablePages').show(300);
+                        });
                     });
             }
         });

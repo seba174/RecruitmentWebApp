@@ -4,8 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 
-appsettings.json
-
 
 # User-specific files
 *.suo
@@ -332,3 +330,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/RecruitmentApp.UITests/appsettings.test.json
+/RecrutimentApp/appsettings.json

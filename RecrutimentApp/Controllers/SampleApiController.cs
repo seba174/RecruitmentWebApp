@@ -84,7 +84,7 @@ namespace RecrutimentApp.Controllers
         /// </remarks>
         /// <param name="id">Id of job offer</param>
         /// <returns>Job applications which are associated with job offer which id is passed</returns>
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IEnumerable<JobApplication>> GetJobApplications(int id)
         {
             return await dataContext.JobApplications.Where(ja => ja.JobOfferId == id).ToListAsync();
@@ -99,7 +99,6 @@ namespace RecrutimentApp.Controllers
         /// <param name="searchString">Search string which will be used to filter companies</param>
         /// <returns>Companies which name contains given string</returns>
         [HttpGet]
-        [HttpGet("{searchString}")]
         public async Task<IEnumerable<Company>> GetCompanies(string searchString)
         {
             if (string.IsNullOrEmpty(searchString))
