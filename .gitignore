@@ -331,5 +331,7 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /RecruitmentApp.UITests/appsettings.test.json
-/RecrutimentApp/appsettings.json
 /RecruitmentApp.IntegrationTests/testsettings.json
+/RecrutimentApp/appsettings.Development.json
+/RecrutimentApp/appsettings.Production.json
+/RecrutimentApp/appsettings.json
