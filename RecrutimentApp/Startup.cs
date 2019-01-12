@@ -61,8 +61,8 @@ namespace RecrutimentApp
                     Description = "WebApi documentation for RecruitmentApp",
                     Contact = new Contact
                     {
-                        Name = "Sebastian Safin",
-                        Email = "sebastian.safin@outlook.com"
+                        Name = "XXX YYY",
+                        Email = "XXX@YYY.ZZZ"
                     }
                 });
                 // Set the comments path for the Swagger JSON and UI.
@@ -87,13 +87,14 @@ namespace RecrutimentApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseSession();
