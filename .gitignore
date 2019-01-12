@@ -332,3 +332,4 @@ ASALocalRun/
 .mfractor/
 /RecruitmentApp.UITests/appsettings.test.json
 /RecrutimentApp/appsettings.json
+/RecruitmentApp.IntegrationTests/testsettings.json
