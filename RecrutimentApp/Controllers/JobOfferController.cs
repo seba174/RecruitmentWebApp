@@ -12,7 +12,6 @@ using static Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState;
 
 namespace RecrutimentApp.Controllers
 {
-    [Authorize]
     public class JobOfferController : Controller
     {
         private readonly DataContext dataContext;

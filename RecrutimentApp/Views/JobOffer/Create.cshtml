@@ -3,70 +3,72 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="row page-box mt-3">
-    <div class="col-sm-12">
-        <h2 class="mb-4">New Job Offer</h2>
-        @using (Html.BeginForm("Create"))
-        {
-            @Html.AntiForgeryToken()
+<div class="container body-content">
+    <div class="row page-box mt-3">
+        <div class="col-sm-12">
+            <h2 class="mb-4">New Job Offer</h2>
+            @using (Html.BeginForm("Create"))
+            {
+                @Html.AntiForgeryToken()
 
-            <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m => m.JobTitle)
-            </div>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.JobTitle)
+                </div>
 
-            <div class="form-group">
-                @Html.BoldLabelFor(m => m.Company)
-                @Html.DropDownListFor(m => m.CompanyId, new SelectListItem[0],
-                 new {
-                     @class = "form-control",
-                     data_bind = "options: companies, optionsText: 'name', optionsValue: 'id', value: selectedCompanyId"
-                 })
-                @Html.ValidationMessageFor(m => m.CompanyId, "", new { @class = "text-danger" })
-            </div>
+                <div class="form-group">
+                    @Html.BoldLabelFor(m => m.Company)
+                    @Html.DropDownListFor(m => m.CompanyId, new SelectListItem[0],
+                     new {
+                         @class = "form-control",
+                         data_bind = "options: companies, optionsText: 'name', optionsValue: 'id', value: selectedCompanyId"
+                     })
+                    @Html.ValidationMessageFor(m => m.CompanyId, "", new { @class = "text-danger" })
+                </div>
 
-            <div class="d-flex flex-row-reverse">
-                <div class="p-2">
-                    <div>
-                        <label data-bind="text: headquater"></label>
+                <div class="d-flex flex-row-reverse">
+                    <div class="p-2">
+                        <div>
+                            <label data-bind="text: headquater"></label>
+                        </div>
+                        <div>
+                            <label data-bind="text: website"></label>
+                        </div>
                     </div>
-                    <div>
-                        <label data-bind="text: website"></label>
+                    <div class="p-2">
+                        <div>
+                            @Html.BoldLabelFor(m => m.Company.HeadquaterLocation):
+                        </div>
+                        <div class="float-right">
+                            @Html.BoldLabelFor(m => m.Company.WebSiteUrl):
+                        </div>
                     </div>
                 </div>
-                <div class="p-2">
-                    <div>
-                        @Html.BoldLabelFor(m => m.Company.HeadquaterLocation):
-                    </div>
-                    <div class="float-right">
-                        @Html.BoldLabelFor(m => m.Company.WebSiteUrl):
-                    </div>
+
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.Location)
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m => m.Location)
-            </div>
+                <div class="form-group">
+                    @Html.LabelMoneyEditorValidationMessageFor(m => m.SalaryFrom, "From")
+                </div>
 
-            <div class="form-group">
-                @Html.LabelMoneyEditorValidationMessageFor(m => m.SalaryFrom, "From")
-            </div>
+                <div class="form-group">
+                    @Html.LabelMoneyEditorValidationMessageFor(m => m.SalaryTo, "To")
+                </div>
 
-            <div class="form-group">
-                @Html.LabelMoneyEditorValidationMessageFor(m => m.SalaryTo, "To")
-            </div>
+                <div class="form-group">
+                    @Html.LabelCalendarEditorValidationMessageFor(m => m.ValidUntil)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelCalendarEditorValidationMessageFor(m => m.ValidUntil)
-            </div>
+                <div class="form-group">
+                    @Html.LabelTextAreaValidationMessageFor(m => m.Description, "Enter description")
+                </div>
 
-            <div class="form-group">
-                @Html.LabelTextAreaValidationMessageFor(m => m.Description, "Enter description")
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create</button>
-            </div>
-        }
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            }
+        </div>
     </div>
 </div>
 

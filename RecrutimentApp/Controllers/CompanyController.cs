@@ -11,7 +11,6 @@ using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Controllers
 {
-    [Authorize]
     public class CompanyController : Controller
     {
         private readonly DataContext dataContext;

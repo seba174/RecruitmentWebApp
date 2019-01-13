@@ -3,30 +3,32 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="row mt-3">
-    <div class="col-sm-12">
-        <h2>@Model.Name</h2>
+<div class="container body-content">
+    <div class="row mt-3">
+        <div class="col-sm-12">
+            <h2>@Model.Name</h2>
 
-        <div class="form-group mt-4">
-            @Html.LabelEmptyLineDisplayFor(m => m.Name)
-        </div>
+            <div class="form-group mt-4">
+                @Html.LabelEmptyLineDisplayFor(m => m.Name)
+            </div>
 
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.HeadquaterLocation)
-        </div>
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.HeadquaterLocation)
+            </div>
 
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.WebSiteUrl)
-        </div>
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.WebSiteUrl)
+            </div>
 
-        @if (User.IsInRole(Roles.Admin))
-        {
-            @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-primary" })
-            @using (Html.BeginForm("Delete", "Company", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+            @if (User.IsInRole(Roles.Admin))
             {
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-danger">Delete</button>
+                @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-primary" })
+                @using (Html.BeginForm("Delete", "Company", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                }
             }
-        }
+        </div>
     </div>
 </div>

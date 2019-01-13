@@ -1,22 +1,79 @@
-﻿@{ 
-    ViewData["Title"] = "Contact"; 
+﻿@model ContactForm
+@{
+    ViewData["Title"] = "Contact";
 }
 
-<h2 class="mt-3">@ViewData["Title"]</h2>
+<div class="container body-content">
+    <div class="row page-box mt-3">
+        <div class="col-sm-12">
 
+            <h2>Contact Us</h2>
+            <p> Please send your message below. We will get back to you at the earliest! </p>
+            <form id="contactForm" action="/Home/SubmitContactForm" method="post">
+                @Html.AntiForgeryToken()
 
-<address class="mt-3">
-    Recruitment Company
-    <br /> Warsaw, PL
-    <br />
-    <abbr title="Phone">P:</abbr>
-    000-000-000
-</address>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.Name)
+                </div>
 
-<address>
-    <strong>Support:</strong>
-    <a href="mailto:Support@XXX.YYY">support@RecruitmentCompany.com</a>
-    <br />
-    <strong>Marketing:</strong>
-    <a href="mailto:Marketing@XXX.YYY">marketing@RecruitmentCompany.com</a>
-</address>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.EmailAddress)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelTextAreaValidationMessageFor(m => m.Description, "Enter description")
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+            <div id="success_message" style="font-size:x-large; display:none;">
+                <span class="successBadge d-inline-block">
+                    <i class="far fa-check-square"></i>
+                </span>
+                <span class="d-inline-block">Posted your message successfully!</span>
+            </div>
+            <div id="error_message" style="font-size:x-large; display:none;">
+                <span class="errorBadge d-inline-block">
+                    <i class="fas fa-times"></i>
+                </span>
+                <span class="d-inline-block">Error</span>
+                <div style="font-size:large;">
+                    <span>Sorry, there was an error sending your form.</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var form = $('#contactForm');
+
+        form.submit(function (e) {
+            e.preventDefault();
+
+            if (!$(this).valid()) {
+                return;
+            }
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function () {
+                    $('form#contactForm').hide();
+                    $('#success_message').show();
+                },
+                error: function () {
+                    $('form#contactForm').hide();
+                    $('#error_message').show();
+                }
+            });
+        });
+
+    </script>
+}

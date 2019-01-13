@@ -13,7 +13,6 @@ using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Controllers
 {
-    [Authorize]
     public class JobApplicationController : Controller
     {
         private readonly DataContext dataContext;
@@ -47,6 +46,7 @@ namespace RecrutimentApp.Controllers
             });
         }
 
+        [Authorize]
         public async Task<ActionResult> Create(int? offerId)
         {
             if (offerId is null)
@@ -64,9 +64,13 @@ namespace RecrutimentApp.Controllers
             {
                 JobOfferId = offerId.Value,
                 OfferName = offer.JobTitle,
+                FirstName = UserInformations.GetUserGivenName(User),
+                Lastname = UserInformations.GetUserSurname(User),
+                EmailAddress = UserInformations.GetUserEmail(User)
             });
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobApplicationWithOfferName model)

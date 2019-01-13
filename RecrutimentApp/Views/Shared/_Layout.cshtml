@@ -6,15 +6,17 @@
     <title>@ViewData["Title"] - RecrutimentApp</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.css"/>
-        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+          crossorigin="anonymous">
 </head>
 <body>
     <header>
@@ -32,12 +34,6 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="JobOffer" asp-action="Index">Job Offers</a>
                         </li>
                         <li class="nav-item">
@@ -49,12 +45,48 @@
             </div>
         </nav>
     </header>
-    <main role="main" class="container body-content">
+
+    <main role="main" class="content">
         @RenderBody()
-        <hr />
     </main>
-    <footer class="container">
-        <p>&copy; 2018 - RecrutimentApp</p>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="copyright">Copyright &copy; RecrutimentApp 2019</span>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline social-buttons">
+                        <li class="list-inline-item">
+                            <a href="https://twitter.com/">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://www.facebook.com/">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://www.linkedin.com/">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline quicklinks">
+                        <li class="list-inline-item">
+                            @Html.ActionLink("Contact", "Contact", "Home")
+                        </li>
+                        <li class="list-inline-item">
+                            @Html.ActionLink("Terms of Use", "TermsOfUse", "Home")
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <environment include="Development">

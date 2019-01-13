@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecrutimentApp.EntityFramework;
 using RecrutimentApp.Models;
+using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Controllers
 {
-    [Authorize]
     [ApiController]
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
@@ -50,7 +50,7 @@ namespace RecrutimentApp.Controllers
                 .OrderBy(o => o.JobTitle)
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();     
+                .ToListAsync();
             }
             else
             {
@@ -85,6 +85,7 @@ namespace RecrutimentApp.Controllers
         /// <param name="id">Id of job offer</param>
         /// <returns>Job applications which are associated with job offer which id is passed</returns>
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IEnumerable<JobApplication>> GetJobApplications(int id)
         {
             return await dataContext.JobApplications.Where(ja => ja.JobOfferId == id).ToListAsync();

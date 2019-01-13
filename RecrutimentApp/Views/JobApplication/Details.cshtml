@@ -3,38 +3,37 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="row page-box mt-3">
-    <div class="col-sm-12">
-        <h2 class="mb-4">Details of application for: @Html.ActionLink(Model.OfferName, "Details", "JobOffer", new { id = Model.JobOfferId })</h2>
+<div class="container body-content">
+    <div class="row page-box mt-3">
+        <div class="col-sm-12">
+            <h2 class="mb-4">Details of application for: @Html.ActionLink(Model.OfferName, "Details", "JobOffer", new { id = Model.JobOfferId })</h2>
 
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.FirstName)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.Lastname)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.EmailAddress)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.PhoneNumber)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelEmptyLineDisplayFor(m => m.DateOfBirth)
-        </div>
-
-        @if (User.IsInRole(Roles.Admin))
-        {
             <div class="form-group">
-                @Html.LabelEmptyLineDisplayFor(m => m.CvUrl)
+                @Html.LabelEmptyLineDisplayFor(m => m.FirstName)
             </div>
-        }
+
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.Lastname)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.EmailAddress)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.PhoneNumber)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelEmptyLineDisplayFor(m => m.DateOfBirth)
+            </div>
+
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <div class="form-group">
+                    @Html.LabelEmptyLineDisplayFor(m => m.CvUrl)
+                </div>
+            }
+        </div>
     </div>
 </div>
-
-
-

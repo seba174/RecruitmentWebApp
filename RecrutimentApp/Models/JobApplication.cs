@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using RecrutimentApp.Utilities;
 
 namespace RecrutimentApp.Models
 {
@@ -28,6 +29,7 @@ namespace RecrutimentApp.Models
 
         [Required]
         [DataType(DataType.Date)]
+        [Adult]
         [Display(Name = "Date of birth")]
         public DateTime? DateOfBirth { get; set; }
 

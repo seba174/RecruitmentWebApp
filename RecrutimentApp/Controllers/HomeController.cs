@@ -1,31 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RecrutimentApp.EntityFramework;
 using RecrutimentApp.Models;
 
 namespace RecrutimentApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly DataContext dataContext;
+
+        public HomeController(DataContext context)
+        {
+            dataContext = context;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Contact()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
-        public IActionResult Contact()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitContactForm(ContactForm contactForm)
         {
-            ViewData["Message"] = "Your contact page.";
+            if (contactForm == null || !ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            await dataContext.ContactForms.AddAsync(contactForm);
+
+            try
+            {
+                await dataContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        public IActionResult TermsOfUse()
+        {
             return View();
         }
 

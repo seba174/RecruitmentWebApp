@@ -3,47 +3,46 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="row page-box mt-3">
-    <div class="col-sm-12">
-        <h2 class="mb-4">Apply for: @Html.ActionLink(Model.OfferName, "Details", "JobOffer", new { id = Model.JobOfferId })</h2>
-        @using (Html.BeginForm("Create", "JobApplication", null, FormMethod.Post, true, new { @enctype="multipart/form-data" } ))
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.JobOfferId)
-            @Html.HiddenFor(m => m.OfferName)
+<div class="container body-content">
+    <div class="row page-box mt-3">
+        <div class="col-sm-12">
+            <h2 class="mb-4">Apply for: @Html.ActionLink(Model.OfferName, "Details", "JobOffer", new { id = Model.JobOfferId })</h2>
+            @using (Html.BeginForm("Create", "JobApplication", null, FormMethod.Post, true, new { @enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.JobOfferId)
+                @Html.HiddenFor(m => m.OfferName)
 
-            <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m => m.FirstName)
-            </div>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.FirstName)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m => m.Lastname)
-            </div>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.Lastname)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m => m.EmailAddress)
-            </div>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.EmailAddress)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelEditorValidationMessageFor(m => m.PhoneNumber)
-            </div>
+                <div class="form-group">
+                    @Html.LabelEditorValidationMessageFor(m => m.PhoneNumber)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelCalendarEditorValidationMessageFor(m => m.DateOfBirth)
-            </div>
+                <div class="form-group">
+                    @Html.LabelCalendarEditorValidationMessageFor(m => m.DateOfBirth)
+                </div>
 
-            <div class="form-group">
-                @Html.BoldLabelFor(m => m.File)
-                <input type="file" name="@Html.NameFor(m => m.File)" id="@Html.IdFor(m => m.File)" class="form-control-file" accept=".pdf" required/>
-                @Html.ValidationMessageFor(m => m.File, "", new { @class = "text-danger" })
-            </div>
+                <div class="form-group">
+                    @Html.BoldLabelFor(m => m.File)
+                    <input type="file" name="@Html.NameFor(m => m.File)" id="@Html.IdFor(m => m.File)" class="form-control-file" accept=".pdf" required />
+                    @Html.ValidationMessageFor(m => m.File, "", new { @class = "text-danger" })
+                </div>
 
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">Create</button>
-            </div>
-        }
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            }
+        </div>
     </div>
 </div>
-
-
-

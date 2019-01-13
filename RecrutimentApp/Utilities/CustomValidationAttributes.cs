@@ -60,6 +60,33 @@ namespace RecrutimentApp.Utilities
         }
     }
 
+    public class AdultAttribute : ValidationAttribute, IClientModelValidator
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            DateTime? date = value as DateTime?;
+            if (date.HasValue)
+            {
+                if (date.Value.Date.AddYears(18) > DateTime.Now)
+                {
+                    return new ValidationResult(GetErrorMessage(validationContext.DisplayName));
+                }
+            }
+            return ValidationResult.Success;
+        }
+
+        public void AddValidation(ClientModelValidationContext context)
+        {
+            ValidationAttributesHelpers.MergeAttribute(context.Attributes, "data-val", "true");
+            ValidationAttributesHelpers.MergeAttribute(context.Attributes, "data-val-adult", GetErrorMessage(context.ModelMetadata.DisplayName));
+        }
+
+        private string GetErrorMessage(string displayName)
+        {
+            return $"You must have at least 18 years to apply for a job";
+        }
+    }
+
     public class MoneyNotGreaterThanAttribute : ValidationAttribute, IClientModelValidator
     {
         private readonly string propertyNameToCompare;

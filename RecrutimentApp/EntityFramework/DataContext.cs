@@ -12,5 +12,7 @@ namespace RecrutimentApp.EntityFramework
         public DbSet<JobOffer> JobOffers { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+
+        public DbSet<ContactForm> ContactForms { get; set; }
     }
 }
