@@ -104,10 +104,12 @@ namespace RecrutimentApp.Controllers
         {
             if (string.IsNullOrEmpty(searchString))
             {
-                return await dataContext.Companies.ToListAsync();
+                return await dataContext.Companies.OrderBy(c => c.Name).ToListAsync();
             }
 
-            return await dataContext.Companies.Where(o => o.Name.ToLower().Contains(searchString.ToLower())).ToListAsync();
+            return await dataContext.Companies
+                .Where(o => o.Name.ToLower().Contains(searchString.ToLower()))
+                .OrderBy(c => c.Name).ToListAsync();
         }
     }
 }
