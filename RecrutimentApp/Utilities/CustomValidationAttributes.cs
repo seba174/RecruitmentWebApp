@@ -29,7 +29,7 @@ namespace RecrutimentApp.Utilities
 
         private string GetErrorMessage(string displayName)
         {
-            return $"Field \"{displayName}\" must have value greater than 0";
+            return $"Field {displayName} must have value greater than 0.";
         }
     }
 
@@ -56,7 +56,7 @@ namespace RecrutimentApp.Utilities
 
         private string GetErrorMessage(string displayName)
         {
-            return $"The {displayName} field can not have past date";
+            return $"The {displayName} field can not have past date.";
         }
     }
 
@@ -83,7 +83,34 @@ namespace RecrutimentApp.Utilities
 
         private string GetErrorMessage(string displayName)
         {
-            return $"You must have at least 18 years to apply for a job";
+            return $"You must have at least 18 years to apply for a job.";
+        }
+    }
+
+    public class NotTooOldAttribute : ValidationAttribute, IClientModelValidator
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            DateTime? date = value as DateTime?;
+            if (date.HasValue)
+            {
+                if (date.Value.Date.AddYears(100) <= DateTime.Now)
+                {
+                    return new ValidationResult(GetErrorMessage(validationContext.DisplayName));
+                }
+            }
+            return ValidationResult.Success;
+        }
+
+        public void AddValidation(ClientModelValidationContext context)
+        {
+            ValidationAttributesHelpers.MergeAttribute(context.Attributes, "data-val", "true");
+            ValidationAttributesHelpers.MergeAttribute(context.Attributes, "data-val-nottooold", GetErrorMessage(context.ModelMetadata.DisplayName));
+        }
+
+        private string GetErrorMessage(string displayName)
+        {
+            return $"Are you really that old? If yes, please contact us :).";
         }
     }
 
@@ -122,7 +149,7 @@ namespace RecrutimentApp.Utilities
 
         private string GetErrorMessage(string thisField, string otherField)
         {
-            return $"The {thisField} field can not have greater value than {otherField} field";
+            return $"The {thisField} field can not have greater value than {otherField} field.";
         }
     }
 

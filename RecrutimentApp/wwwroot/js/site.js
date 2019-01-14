@@ -42,6 +42,22 @@
             return true;
         });
 
+    jQuery.validator.addMethod('nottooold',
+        function (value, _element, _params) {
+            if (value) {
+                var dateFromInput = new Date(value);
+                if (!isValidDate(dateFromInput))
+                    return true;
+
+                dateFromInput.setFullYear(dateFromInput.getFullYear() + 100);
+
+                var currentDate = new Date();
+                if (dateFromInput <= currentDate)
+                    return false;
+            }
+            return true;
+        });
+
     jQuery.validator.addMethod('moneynotgreaterthan',
         function (value, _element, params) {
             var $property = $('#' + params.otherattribute);
@@ -74,6 +90,12 @@
         function (options) {
             options.rules['adult'] = [];
             options.messages['adult'] = options.message;
+        });
+
+    jQuery.validator.unobtrusive.adapters.add('nottooold', [],
+        function (options) {
+            options.rules['nottooold'] = [];
+            options.messages['nottooold'] = options.message;
         });
 
     jQuery.validator.unobtrusive.adapters.add('moneynotgreaterthan', ['otherattribute'],

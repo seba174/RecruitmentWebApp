@@ -35,7 +35,7 @@ namespace RecrutimentApp.Controllers
         [HttpGet]
         public async Task<JobOfferPagingViewModel> GetJobOffers(string searchString, int pageNo = 1)
         {
-            int totalRecord, pageSize = 10;
+            int totalRecord, pageSize = 4;
 
             IEnumerable<JobOffer> offers = null;
             if (string.IsNullOrEmpty(searchString))

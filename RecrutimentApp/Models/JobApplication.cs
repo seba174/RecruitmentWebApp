@@ -30,6 +30,7 @@ namespace RecrutimentApp.Models
         [Required]
         [DataType(DataType.Date)]
         [Adult]
+        [NotTooOld]
         [Display(Name = "Date of birth")]
         public DateTime? DateOfBirth { get; set; }
 

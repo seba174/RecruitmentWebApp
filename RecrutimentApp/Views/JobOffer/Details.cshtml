@@ -3,7 +3,7 @@
     ViewBag.Title = "Offer";
 }
 
-<div class="container body-content">
+<div class="container body-content mb-3">
     <div class="row mt-3 mb-2">
         <h1>@Model.JobTitle</h1>
         @Html.HiddenFor(m => m.Id, new { id = "offerId" })
@@ -90,8 +90,13 @@
     <script>
         var uri = '/api/SampleApi/GetJobApplications';
         var jobApplicationsDetails = '@Url.Action("Details", "JobApplication")';
+        var isAdmin = @Json.Serialize(@User.IsInRole(Roles.Admin));
 
-        $(document).ready(find);
+        $(document).ready(function () {
+            if (isAdmin) {
+                find();
+            }
+        });
 
         function find() {
             var id = $('#offerId').val();

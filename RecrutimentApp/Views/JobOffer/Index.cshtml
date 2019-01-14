@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<JobOffer>
 
 <div class="container body-content">
-    <div class="row page-box mt-3">
+    <div class="row page-box mt-3 mb-3">
         <div class="col-sm-12">
             <h2>Job Offers list</h2>
 
@@ -15,7 +15,7 @@
                 </span>
             </div>
 
-            <table class="table table-striped table-hover" id="recordsTable" style="display:none">
+            <table class="table table-striped table-hover mb-0" id="recordsTable" style="display:none">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Job Title</th>
@@ -26,13 +26,14 @@
                 </thead>
                 <tbody id="recordsGrid" />
             </table>
-            <table class="table">
+            <table class="table mt-0 mb-0">
                 <tbody id="recordsTablePages" style="display:none" />
             </table>
 
             @if (User.IsInRole(Roles.Admin))
             {
-                @Html.ActionLink("Create job offer", "Create", "JobOffer", null, new { id = "createJobOffer", @class = "btn btn-primary" })
+                @Html.ActionLink("Create job offer", "Create", "JobOffer", null,
+                    new { id = "createJobOffer", @class = "btn btn-primary", style = "display:none" })
             }
         </div>
     </div>
@@ -40,10 +41,11 @@
 
 @section Scripts {
     <script>
+        var currentPage = 1;
         var uri = '/api/SampleApi/GetJobOffers';
 
         $(document).ready(function () {
-            var currentPage = 1;
+
             find(currentPage);
 
             $('#recordsTablePages').on('click', '.footerContent a', function (e) {
@@ -64,54 +66,62 @@
                     $('#searchButton').click();
                 }
             });
-
-            function find(pageNo) {
-                var searchString = $('#search').val();
-                $.getJSON(uri, { searchString: searchString, pageNo: pageNo })
-                    .done(function (data) {
-                        var c = [];
-                        $.each(data.jobOffers, function (_key, item) {
-                            c.push("<tr><td><a href=\"/JobOffer/Details?id=" + item.id + "\">" + item.jobTitle + "<a></td>");
-                            c.push("<td>" + item.company.name + "</td>");
-                            c.push("<td>" + item.location + "</td>");
-                            c.push("<td>" + new Date(item.created).toUTCString() + "</td></tr>");
-                        });
-
-                        var totalPage = parseInt(data.totalPage);
-                        var $footer = $('<tr/>');
-                        var $footerTD = $('<td/>').attr('colspan', 4).attr('align', 'right').addClass('footerContent');
-
-                        if (totalPage > 0) {
-                            for (var i = 1; i <= totalPage; i++) {
-                                var $page = $('<span/>').addClass((i == currentPage) ? "current" : "");
-
-                                if (i == currentPage) {
-                                    $page.addClass("btn btn-outline-dark active");
-                                    $page.html(i);
-                                }
-                                else {
-                                    var $a = $('<a/>');
-                                    $a.addClass("btn btn-outline-dark");
-                                    $a.attr('href', "#");
-                                    $a.html(i);
-                                    $page.html($a);
-                                }
-
-                                $footerTD.append($page);
-                            }
-                            $footer.append($footerTD);
-                        }
-                        $('#recordsTable').hide();
-                        $('#recordsTablePages').hide();
-
-                        $('#recordsGrid').html(c.join(""));
-                        $('#recordsTablePages').html($footer);
-
-                        $('#recordsTable').show(400, function () {
-                            $('#recordsTablePages').show(300);
-                        });
-                    });
-            }
         });
+
+        function find(pageNo) {
+            var searchString = $('#search').val();
+            $.getJSON(uri, { searchString: searchString, pageNo: pageNo })
+                .done(successfullyLoadedData)
+                .fail(function () {
+                    $('#createJobOffer').show(150);
+                });
+        }
+
+        function successfullyLoadedData(data) {
+            var c = [];
+            $.each(data.jobOffers, function (_key, item) {
+                c.push("<tr><td><a href=\"/JobOffer/Details?id=" + item.id + "\">" + item.jobTitle + "<a></td>");
+                c.push("<td>" + item.company.name + "</td>");
+                c.push("<td>" + item.location + "</td>");
+                c.push("<td>" + new Date(item.created).toUTCString() + "</td></tr>");
+            });
+
+            var totalPage = parseInt(data.totalPage);
+            var $footer = $('<tr/>');
+            var $footerTD = $('<td/>').attr('colspan', 4).attr('align', 'right').addClass('footerContent');
+
+            if (totalPage > 0) {
+                for (var i = 1; i <= totalPage; i++) {
+                    var $page = $('<span/>').addClass((i == currentPage) ? "current" : "");
+
+                    if (i == currentPage) {
+                        $page.addClass("btn btn-outline-dark active");
+                        $page.html(i);
+                    }
+                    else {
+                        var $a = $('<a/>');
+                        $a.addClass("btn btn-outline-dark");
+                        $a.attr('href', "#");
+                        $a.html(i);
+                        $page.html($a);
+                    }
+
+                    $footerTD.append($page);
+                }
+                $footer.append($footerTD);
+            }
+
+            $('#createJobOffer').hide();
+            $('#recordsTablePages').hide();
+            $('#recordsTable').hide();
+
+            $('#recordsGrid').html(c.join(""));
+            $('#recordsTablePages').html($footer);
+
+            $('#recordsTable').show(400, function () {
+                $('#recordsTablePages').show(200);
+                $('#createJobOffer').show(100);
+            });
+        }
     </script>
 }

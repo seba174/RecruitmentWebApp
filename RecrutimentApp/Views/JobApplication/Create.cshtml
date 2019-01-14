@@ -4,7 +4,7 @@
 }
 
 <div class="container body-content">
-    <div class="row page-box mt-3">
+    <div class="row page-box mt-3 mb-3">
         <div class="col-sm-12">
             <h2 class="mb-4">Apply for: @Html.ActionLink(Model.OfferName, "Details", "JobOffer", new { id = Model.JobOfferId })</h2>
             @using (Html.BeginForm("Create", "JobApplication", null, FormMethod.Post, true, new { @enctype = "multipart/form-data" }))
